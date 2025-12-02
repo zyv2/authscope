@@ -1,28 +1,37 @@
-# AuthScope - JWT Security Analysis Tool
+# 🔐 AuthScope - Simple JWT Analysis Tool for CTF
 
-A lightweight Python tool for analyzing and testing JWT/Cookie security in CTF challenges and penetration tests.
+A lightweight Python tool for analyzing JWT tokens in CTF challenges. No CLI - just import and use!
 
 ## Features
 
-- **JWT Analysis**: Decode and analyze JWTs for common vulnerabilities
-- **Brute-force Testing**: Test common secrets against JWT signatures
-- **Attack Generation**: Create modified tokens for testing (none algorithm, tampered payloads)
-- **Secure Crypto**: AES-GCM encryption for sensitive data (AEAD compliant)
-- **Nuclei Integration**: Export test cases to Nuclei templates
-- **Cookie Analysis**: Parse and test cookie flags
+- 🔍 **JWT Analysis**: Decode and analyze tokens for vulnerabilities
+- 🔑 **Secret Testing**: Test common JWT secrets
+- ⚔️ **Attack Generation**: Create modified tokens for testing
+- 🔒 **Secure Crypto**: AES-GCM encryption (AEAD compliant)
+- 📋 **Nuclei Export**: Generate test templates
+- 🚀 **Simple API**: Just import and use in your scripts
 
-## Installation
-pip install -r requirements.txt
+## Quick Start
 
-## CLI Usage
+```python
+from authscope import AuthScope, quick_analyze
 
-# Analyze JWT
-python -m authscope.cli analyze --token "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+# Quick analysis (prints results)
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+quick_analyze(token)
 
-# Test secrets
-python -m authscope.cli brute --token "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..." --wordlist secrets.txt
+# Or use the class directly
+scope = AuthScope()
+result = scope.analyze(token)
 
-# Export to Nuclei
-python -m authscope.cli export --token tokens.txt --output jwt_templates.yaml
-```bash
+print(f"Algorithm: {result.algorithm}")
+print(f"Vulnerabilities: {result.vulnerabilities}")
 
+# Test common secrets
+secret = scope.brute_force(token)
+if secret:
+    print(f"Found secret: {secret}")
+
+# Generate attack token
+none_token = scope.create_none_attack(token)
+print(f"None attack: {none_token}")
